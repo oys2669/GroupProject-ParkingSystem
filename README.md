@@ -81,35 +81,61 @@ erDiagram
     ICN_MEMBER ||--o{ ICN_REPORT : "問い合わせる"
 
     ICN_MEMBER {
-        string member_id PK
-        string vehicle_type "車両タイプ"
+        varchar2 member_id PK
+        varchar2 password
+        varchar2 name
+        varchar2 phone_number
+        varchar2 email
+        varchar2 vehicle_number
+        varchar2 vehicle_type "車両タイプ"
+        date reg_date
+        date exit_date
+        date update_date
     }
     ICN_SEAT {
-        string seat_no PK
-        string lot_id "エリア(P1〜P9)"
-        string seat_type "区画タイプ"
+        varchar2 seat_no PK
+        varchar2 lot_id "エリア(P1〜P9)"
+        varchar2 seat_type "区画タイプ"
     }
     ICN_FLIGHT {
         number flight_id PK
-        string flight_no "便名"
-        string remark "運航状況"
+        varchar2 flight_no "便名"
+        varchar2 remark "運航状況"
+        varchar2 airport
+        date schedule_datetime
+        date estimated_datetime
+        date updated_at
+        
     }
     ICN_RESERVATION {
-        string reservation_id PK
-        string member_id FK
-        string seat_no FK
-        string flight_no "便名"
-        string reservation_status "状態"
+        varchar2 reservation_id PK "予約ID"
+        varchar2 member_id FK "予約者"
+        varchar2 seat_no FK "座席番号"
+        varchar2 flight_id "航空便ID"
+        varchar2 flight_no "便名"
+        varchar2 reservation_status "状態"
+        date reservation_start_time "設定予約駐車時刻"
+        date reservation_end_time "設定予約出車時刻"
+        date reservation_parking_start_time "実駐車時刻"
+        date reservation_out_time "実出車時刻"
+        date reservation_date "予約完了時刻"
+        date reservation_arrive_time "予想空港到着時間"
+        number reservation_estimate_amount "予想決済金額"
+        number reservation_deposit_amount "予約金"
+        number final_amount "最終決済金額"
     }
     ICN_PAYMENT {
-        string payment_id PK
-        string reservation_id FK
-        string payment_type "決済区分"
+        varchar2 payment_id PK
+        varchar2 reservation_id FK
+        varchar2 payment_type "決済区分（初期決済、最終決済、キャンセル"
+        varchar2 payment_method "決済手段"
+        date payment_date
+        number payment_amount "決済金額"
     }
     ICN_REPORT {
         number report_id PK
-        string member_id FK
-        string report_status "処理状態"
+        varchar2 member_id FK
+        varchar2 report_status "処理状態"
     }
 ```
 
