@@ -18,7 +18,7 @@
 
 「仁川空港 駐車予約」は、TEAM JK が開発した「仁川空港 第1ターミナル 駐車予約・管理システム」です。空港の駐車場を出発前に予約し、出庫時に精算できるようにすることを目的としています。
 
-公共データポータルで公開されている仁川国際空港公社のオープンAPIと連携し、駐車場の混雑状況とフライトの運航状況を実データで扱います。利用者は予約時に搭乗する便を登録でき、その便が欠航になった場合は、システムが長期駐車への切り替えと区画の再割当を自動で行います。運営側は、管理者コンソールで予約・会員・売上・お問い合わせを確認できます。
+公共データポータルで公開されている仁川国際空港公社のオープンAPIと連携し、駐車場の混雑状況とフライトの運航状況を実際のデータで扱います。利用者は予約時に搭乗する便を登録でき、その便が欠航になった場合は、システムが長期駐車への切り替えと区画の再割当を自動で行います。運営側は、管理者コンソールで予約・会員・売上・お問い合わせを確認できます。
 
 ## チーム構成・担当
 
@@ -48,7 +48,7 @@
 
 ## 設計のポイント
 
-- **区画の「予約状態」をテーブルに持ちません。** 予約の開始〜終了時刻と照会する時間帯が重なるかどうかを、照会のたびに計算します。「いま利用中の車」と「明日の予約」を区別するためです。
+- **区画の「予約状態」をテーブルに持ちません。** 予約の開始〜終了時刻と照会する時間帯が重なるかどうかを、照会するたびに計算します。「いま利用中の車」と「明日の予約」を区別するためです。
 - **状態の切り替えにスケジューラを使いません。** 予約開始時刻を入庫時刻とみなし、画面を照会する直前のUPDATEで「予約済み」から「駐車中」へ切り替えます。
 - **予約と決済を1つのトランザクションで更新します。** 出庫時の精算と予約キャンセルで、片方だけが成功した状態を残さないためです。
 - **機密情報をソースコードに書きません。** DBアカウントやAPIキーは `secret.properties` から読み込み、このファイルはリポジトリに含めません。
@@ -114,12 +114,12 @@ erDiagram
         varchar2 flight_id "航空便ID"
         varchar2 flight_no "便名"
         varchar2 reservation_status "状態"
-        date reservation_start_time "設定予約駐車時刻"
-        date reservation_end_time "設定予約出車時刻"
-        date reservation_parking_start_time "実駐車時刻"
-        date reservation_out_time "実出車時刻"
+        date reservation_start_time "予約入庫時刻"
+        date reservation_end_time "予約出庫時刻"
+        date reservation_parking_start_time "実入庫時刻"
+        date reservation_out_time "実出庫時刻"
         date reservation_date "予約完了時刻"
-        date reservation_arrive_time "予想空港到着時間"
+        date reservation_arrive_time "空港到着予定時刻"
         number reservation_estimate_amount "予想決済金額"
         number reservation_deposit_amount "予約金"
         number final_amount "最終決済金額"
@@ -127,7 +127,7 @@ erDiagram
     ICN_PAYMENT {
         varchar2 payment_id PK
         varchar2 reservation_id FK
-        varchar2 payment_type "決済区分（初期決済、最終決済、キャンセル)"
+        varchar2 payment_type "決済区分（初期決済、最終決済、キャンセル）"
         varchar2 payment_method "決済手段"
         date payment_date
         number payment_amount "決済金額"
