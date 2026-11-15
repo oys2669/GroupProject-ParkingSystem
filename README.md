@@ -1,33 +1,29 @@
-<div align="center">
-
 # 仁川空港 駐車予約 · INCHEON AIRPORT PARKING
 
 ### 快適な旅のはじまりは、駐車の予約から。
 
-仁川国際空港 第1旅客ターミナルの駐車場を、実際の混雑状況・運航状況と連携して予約・管理するWebサービス
+仁川国際空港 第1ターミナルの駐車場を、実際の混雑状況・運航状況と連携して予約・管理するWebサービス
 
 `Java 21` · `JSP / Servlet` · `JDBC` · `Oracle XE` · `Tomcat 9.0`
 
 **日本語** · [한국어](README.ko.md)
 
-</div>
-
-![仁川空港 駐車予約のメイン画面](docs/images/main.jpg)
+[![仁川空港 駐車予約のメイン画面](docs/images/main.jpg)](docs/images/main.jpg)
 
 ## プロジェクト紹介
 
 「仁川空港 駐車予約」は、TEAM JK が開発した「仁川空港 第1ターミナル 駐車予約・管理システム」です。空港の駐車場を出発前に予約し、出庫時に精算できるようにすることを目的としています。
 
-公共データポータルで公開されている仁川国際空港公社のオープンAPIと連携し、駐車場の混雑状況とフライトの運航状況を実データで扱います。利用者は予約時に搭乗する便を登録でき、その便が欠航になった場合は、システムが長期駐車への切り替えと区画の再割当を自動で行います。運営側は、管理者コンソールで予約・会員・売上・お問い合わせを確認できます。
+公共データポータルで公開されている仁川国際空港公社のオープンAPIと連携し、駐車場の混雑状況とフライトの運航状況を実際のデータで扱います。利用者は予約時に搭乗する便を登録でき、その便が欠航になった場合は、システムが長期駐車への切り替えと区画の再割当を自動で行います。運営側は、管理者コンソールで予約・会員・売上・お問い合わせを確認できます。
 
 ## チーム構成・担当
 
 | メンバー | 担当領域 | 主な担当機能 |
 | --- | --- | --- |
-| イム・ジョンギュ (`wjdrb1226-lab`) · チームリーダー | メイン画面・お知らせ | メイン画面、リアルタイム混雑状況API、共通ヘッダー、お知らせ、利用案内ページ、最終決済への連携 |
+| イム・ジョンギュ (`wjdrb1226-lab`) · チームリーダー | メイン画面・お知らせ | メイン画面、リアルタイム混雑状況API、共通ヘッダー、お知らせ、利用案内ページ、最終決済との連携 |
 | ファン・ヒウォン (`HuiwonHwang`) | 会員・マイページ | 会員DB、会員登録・ログイン、メール認証、マイページ、予約履歴・キャンセル |
 | アン・ビョンチャン (`anbyoungchan123`) | 駐車マップ・欠航対応 | 詳細駐車マップ、区画DB、欠航時の自動再割当 |
-| オ・ユンソプ (`oys2669`) | 予約・決済 | 決済、予約DB、決済ページ、フライト検索の連携、最終決済 |
+| オ・ユンソプ (`oys2669`) | 予約・決済 | 決済、予約DB、決済ページ、フライト検索との連携、最終決済 |
 | カン・ソング (`khangkhang1`) | 管理者コンソール・FAQ | 管理者コンソール、FAQ、お問い合わせ・通報、Notion・議事録の管理 |
 
 > ( )内はGitHubのアカウント名です。
@@ -39,7 +35,7 @@
 | 混雑状況 | エリア(P1〜P9)ごとの空き台数・混雑度のリアルタイム表示 |
 | 予約 | エリア図からの区画選択、SVG駐車マップでの区画指定、車両タイプ(一般・電気自動車・障がい者用)に応じた区画の制限 |
 | フライト | 実在する便の検索・登録、欠航時の長期駐車への自動切り替え、後続予約の自動再割当 |
-| 決済 | 予約金の決済、出庫時の利用時間に応じた最終精算、予約キャンセル |
+| 決済 | 予約金決済、出庫時の利用時間に応じた最終決済、予約キャンセル |
 | 会員 | 会員登録、メール認証、ログイン・ログアウト、ID・パスワードの再設定、マイページ、予約履歴 |
 | お知らせ・FAQ | お知らせの一覧・詳細・添付ファイル、FAQのカテゴリ絞り込み、利用案内・料金案内 |
 | お問い合わせ | お問い合わせ・通報の登録、管理者による回答 |
@@ -48,9 +44,9 @@
 
 ## 設計のポイント
 
-- **区画の「予約状態」をテーブルに持ちません。** 予約の開始〜終了時刻と照会する時間帯が重なるかどうかを、照会のたびに計算します。「いま利用中の車」と「明日の予約」を区別するためです。
-- **状態の切り替えにスケジューラを使いません。** 予約開始時刻を入庫時刻とみなし、画面を照会する直前のUPDATEで「予約済み」から「駐車中」へ切り替えます。
-- **予約と決済を1つのトランザクションで更新します。** 出庫時の精算と予約キャンセルで、片方だけが成功した状態を残さないためです。
+- **区画の「予約状態」をテーブルに保存しません。** 「いま利用中の車」と「明日の予約」を区別できるよう、予約の開始〜終了時刻と確認する時間帯が重なるかどうかを、表示のたびに計算します。
+- **状態の切り替えにスケジューラを使いません。** 予約開始時刻を入庫時刻とみなし、画面を表示する直前のUPDATEで「予約済み」から「駐車中」へ切り替えます。
+- **予約と決済を1つのトランザクションで更新します。** 出庫時の最終決済と予約キャンセルで、片方だけが成功した状態を残さないためです。
 - **機密情報をソースコードに書きません。** DBアカウントやAPIキーは `secret.properties` から読み込み、このファイルはリポジトリに含めません。
 
 ## 技術スタック
@@ -93,7 +89,7 @@ erDiagram
         date update_date
     }
     ICN_SEAT {
-        varchar2 seat_no PK
+        varchar2 seat_no PK "区画番号"
         varchar2 lot_id "エリア(P1〜P9)"
         varchar2 seat_type "区画タイプ"
     }
@@ -105,7 +101,6 @@ erDiagram
         date schedule_datetime
         date estimated_datetime
         date updated_at
-        
     }
     ICN_RESERVATION {
         varchar2 reservation_id PK "予約ID"
@@ -114,20 +109,20 @@ erDiagram
         varchar2 flight_id "航空便ID"
         varchar2 flight_no "便名"
         varchar2 reservation_status "状態"
-        date reservation_start_time "設定予約駐車時刻"
-        date reservation_end_time "設定予約出車時刻"
-        date reservation_parking_start_time "実駐車時刻"
-        date reservation_out_time "実出車時刻"
+        date reservation_start_time "予約入庫時刻"
+        date reservation_end_time "予約出庫時刻"
+        date reservation_parking_start_time "実入庫時刻"
+        date reservation_out_time "実出庫時刻"
         date reservation_date "予約完了時刻"
-        date reservation_arrive_time "予想空港到着時間"
-        number reservation_estimate_amount "予想決済金額"
+        date reservation_arrive_time "空港到着予定時刻"
+        number reservation_estimate_amount "決済予定金額"
         number reservation_deposit_amount "予約金"
         number final_amount "最終決済金額"
     }
     ICN_PAYMENT {
         varchar2 payment_id PK
         varchar2 reservation_id FK
-        varchar2 payment_type "決済区分（初期決済、最終決済、キャンセル)"
+        varchar2 payment_type "決済区分（予約金決済、最終決済、キャンセル）"
         varchar2 payment_method "決済手段"
         date payment_date
         number payment_amount "決済金額"
@@ -143,7 +138,7 @@ erDiagram
 
 ## プロジェクト構成
 
-```text
+```
 src/main
 ├── java
 │   ├── controller    # フロントコントローラ(Servlet)
@@ -177,20 +172,20 @@ sql                   # 一部テーブルのDDL
 
 ### 1. リポジトリをクローン
 
-```bash
+```
 git clone https://github.com/khangkhang1/team-jk.git
 cd team-jk
 ```
 
 ### 2. 設定ファイルを作成
 
-```bash
+```
 cp src/main/java/secret.properties.example src/main/java/secret.properties
 ```
 
 作成された `secret.properties` に、自分の接続情報を入力します。
 
-```properties
+```
 db.user=your-oracle-user
 db.password=your-password
 api.serviceKey=your-service-key
@@ -214,7 +209,7 @@ Eclipse に既存プロジェクトとしてインポートし、Tomcat 9.0 に�
 
 ## 開発状況
 
-2026年8月から10月にかけて、5名のチームプロジェクトとして開発しました。現在の実装には、次の制限があります。
+2026年8月から10月にかけて、5名のチームプロジェクトとして開発しました。現在の実装には、次の制約があります。
 
 - 決済はテストモードです。実際の請求・返金は行いません。
 - リアルタイムAPIは現在の値だけを返すため、未来の時間帯の空き台数は仮の値です。
@@ -225,8 +220,4 @@ READMEの説明とスクリーンショットは、チームで内容を確認�
 
 ---
 
-<div align="center">
-
 **仁川空港 駐車予約 — 快適な旅のはじまりは、駐車の予約から。**
-
-</div>
