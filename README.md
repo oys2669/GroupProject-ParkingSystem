@@ -178,8 +178,8 @@ sql                   # 一部テーブルのDDL
 ### 1. リポジトリをクローン
 
 ```bash
-git clone https://github.com/khangkhang1/team-jk.git
-cd team-jk
+git clone https://github.com/oys2669/GroupProject-ParkingSystem.git
+cd GroupProject-ParkingSystem
 ```
 
 ### 2. 設定ファイルを作成
