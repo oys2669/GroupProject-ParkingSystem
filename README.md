@@ -110,7 +110,7 @@ erDiagram
     ICN_RESERVATION {
         varchar2 reservation_id PK "予約ID"
         varchar2 member_id FK "予約者"
-        varchar2 seat_no FK "座席番号"
+        varchar2 seat_no FK "区画番号"
         varchar2 flight_id "航空便ID"
         varchar2 flight_no "便名"
         varchar2 reservation_status "状態"
