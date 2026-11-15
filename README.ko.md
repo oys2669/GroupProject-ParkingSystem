@@ -177,8 +177,8 @@ sql                   # 일부 테이블 DDL
 ### 1. 저장소 클론
 
 ```bash
-git clone https://github.com/khangkhang1/team-jk.git
-cd team-jk
+git clone https://github.com/oys2669/GroupProject-ParkingSystem.git
+cd GroupProject-ParkingSystem
 ```
 
 ### 2. 설정 파일 생성
