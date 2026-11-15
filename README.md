@@ -127,7 +127,7 @@ erDiagram
     ICN_PAYMENT {
         varchar2 payment_id PK
         varchar2 reservation_id FK
-        varchar2 payment_type "決済区分（初期決済、最終決済、キャンセル"
+        varchar2 payment_type "決済区分（初期決済、最終決済、キャンセル)"
         varchar2 payment_method "決済手段"
         date payment_date
         number payment_amount "決済金額"
